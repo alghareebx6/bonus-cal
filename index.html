@@ -42,7 +42,18 @@ const SB_KEY="sb_publishable_cR3UAo9n5-2yBUqsmIc-bA_0jUNQyPf";
 const ADMIN_USER="admin";
 const ADMIN_PIN="9999";
 
-function toEn(s){return String(s||"").replace(/[٠-٩]/g,function(d){return"٠١٢٣٤٥٦٧٨٩".indexOf(d);}).trim();}
+function toEn(s){
+  const ar="٠١٢٣٤٥٦٧٨٩";
+  let out="";
+  const str=String(s||"").trim();
+  for(let i=0;i<str.length;i++){
+    const ch=str.charAt(i);
+    const idx=ar.indexOf(ch);
+    out+=idx>=0?String(idx):ch;
+  }
+  return out;
+}
+
 async function api(path,opts){
   opts=opts||{};
   const res=await fetch(SB_URL+path,{
@@ -52,14 +63,20 @@ async function api(path,opts){
   });
   if(!res.ok)throw new Error(await res.text());
   const txt=await res.text();
-  return txt?JSON.parse(txt):[];
+  return txt?JSON.parse(txt):new Array();
 }
 
-const MONTHS_AR=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-const STATUS_META={work:{label:"يوم عمل",deduct:false,choices:["✅","💼","🏢","⭐","👍"]},sick:{label:"إجازة مرضية",deduct:true,choices:["➕","🏥","🩺","💊","🩹"]},absent:{label:"غياب",deduct:true,choices:["❌","🚫","⛔","❗","🔴"]},perm:{label:"استئذان",deduct:true,choices:["🕒","🏃","🚪","⏳","⚠️"]},annual:{label:"إجازة دورية",deduct:true,choices:["🌴","✈️","🏖️","☀️","🗓️"]}};
+const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
+const STATUS_META={
+  work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
+  sick:{label:"إجازة مرضية",deduct:true,choices:new Array("➕","🏥","🩺","💊","🩹")},
+  absent:{label:"غياب",deduct:true,choices:new Array("❌","🚫","⛔","❗","🔴")},
+  perm:{label:"استئذان",deduct:true,choices:new Array("🕒","🏃","🚪","⏳","⚠️")},
+  annual:{label:"إجازة دورية",deduct:true,choices:new Array("🌴","✈️","🏖️","☀️","🗓️")}
+};
 let customIcons={work:"✅",sick:"➕",absent:"❌",perm:"🕒",annual:"🌴"};
 try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=JSON.parse(saved);}catch(e){}
-let employees=[],activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
+let employees=new Array(),activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
 
 document.getElementById("loginBtn").onclick=async function(){
   const u=toEn(document.getElementById("loginUser").value).toLowerCase();
@@ -73,9 +90,3 @@ document.getElementById("loginBtn").onclick=async function(){
     document.getElementById("adminControls").classList.remove("hidden");
     document.getElementById("manageEmpBtn").classList.remove("hidden");
     renderCalendar();
-    await loadEmployees();
-    return;
-  }
-  err.textContent="جاري التحقق...";
-  try{
-    const rows=await api("/employees?username=eq."+encodeURIComponent(u)+"&pin=eq."+encodeURIComponent(p)+"&select=*");
