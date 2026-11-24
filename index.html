@@ -39,7 +39,8 @@ body.dark{--bg:#0f172a;--card:#1e293b;--border:#475569;color:#f8fafc}body.dark .
 </div>
 <div class="modal-backdrop" id="empModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">👥 إضافة وإدارة الموظفين</h3><input type="text" id="newEmpName" placeholder="اسم الموظف (مثلاً: أحمد)"/><input type="text" id="newEmpUser" placeholder="اليوزر للدخول (مثلاً: ahmed)"/><input type="text" id="newEmpPin" placeholder="الرقم السري (مثلاً: 1234)"/><button type="button" class="btn" style="width:100%;margin-bottom:12px" onclick="addEmployee()">+ إضافة موظف</button><div id="empList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn-outline" onclick="document.getElementById('empModal').classList.remove('open')">إغلاق</button></div></div></div>
 <div class="modal-backdrop" id="iconsModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص أشكال الرموز</h3><div id="iconSettingsList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div></div></div>
-<div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
+<div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><textarea<div id="permTimeBox" class="hidden" style="margin-bottom:10px"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">⏰ وقت الاستئذان:</label><input type="time" id="permTime" style="margin:0"/></div>
+ id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
 <script>
 const FB_URL="https://firebaseio.com";
 const ADMIN_USER="admin";
@@ -68,16 +69,13 @@ async function fb(path,method,body){
 }
 const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
 const STATUS_META={
-  work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
-  sick:{label:"إجازة مرضية",deduct:true,choices:new Array("➕","🏥","🩺","💊","🩹")},
-  absent:{label:"غياب",deduct:true,choices:new Array("❌","🚫","⛔","❗","🔴")},
-  perm:{label:"استئذان",deduct:true,choices:new Array("🕒","🏃","🚪","⏳","⚠️")},
-  annual:{label:"إجازة دورية",deduct:true,choices:new Array("🌴","✈️","🏖️","☀️","🗓️")}
-};
-let customIcons={work:"✅",sick:"➕",absent:"❌",perm:"🕒",annual:"🌴"};
+work:{label:"يوم عمل",deduct:false,choices:["✅","💼","🏢","⭐","👍"]},sick:{label:"إجازة مرضية",deduct:true,choices:["➕","🏥","🩺","💊","🩹"]},absent:{label:"غياب",deduct:true,choices:["❌","🚫","⛔","❗","🔴"]},perm_in:{label:"استئذان دخول",deduct:true,choices:["🕒","🌅","🚪","⏳","➡️"]},perm_out:{label:"استئذان خروج",deduct:true,choices:["🕔","🌇","🏃","⏳","⬅️"]},annual:{label:"إجازة دورية",deduct:true,choices:["🌴","✈️","🏖️","☀️","🗓️"]}};
+let customIcons={work:"✅",sick:"➕",absent:"❌",perm_in:"🕒",perm_out:"🕔",annual:"🌴"};
+
 try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=JSON.parse(saved);}catch(e){}
 let employees=new Array(),activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
-let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm:"#fef3c7",annual:"#dbeafe"};
+let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm_in:"#fef3c7",perm_out:"#ffedd5",annual:"#dbeafe"};
+
 try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=JSON.parse(sc);}catch(e){}
 
 document.getElementById("loginBtn").onclick=async function(){
@@ -188,6 +186,7 @@ function renderCalendar(){
         const rec=records[key];
         if(rec&&rec.status)td.classList.add("st-"+rec.status);
                         const t=new Date(),isT=(d===t.getDate()&&currentMonth===t.getMonth()&&currentYear===t.getFullYear());if(isT)td.style.border="3px solid #1e3a8a";td.innerHTML='<div class="day-num">'+(isT?'🔵 '+d:d)+'</div>'+(rec&&rec.status?'<div class="day-icon">'+customIcons[rec.status]+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
+td.innerHTML='<div class="day-num">'+(isT?'🔵 '+d:d)+'</div>'+(rec&&rec.status?'<div class="day-icon">'+(customIcons[rec.status]||"🕒")+'</div>':"")+(rec&&rec.time&&(rec.status==="perm_in"||rec.status==="perm_out"||rec.status==="perm")?'<div style="font-size:10px;text-align:center;font-weight:700">'+rec.time+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
 
         td.onclick=function(){openDayModal(key,d);};
         day++;
@@ -200,21 +199,9 @@ function renderCalendar(){
 
 function changeMonth(delta){currentMonth+=delta;if(currentMonth<0){currentMonth=11;currentYear--;}if(currentMonth>11){currentMonth=0;currentYear++;}renderCalendar();}
 
-function openDayModal(key,d){
-  if(!activeEmpId)return alert("أضف موظف أولاً من زر الموظفين");
-  selectedDateKey=key;
-  const rec=records[key]||{};
-  tempStatus=rec.status||"work";tempImage=rec.image||null;
-  document.getElementById("modalDateTitle").textContent=d+" "+MONTHS_AR.at(currentMonth)+" "+currentYear;
-  document.getElementById("dayNote").value=rec.note||"";
-  document.getElementById("dayImageInput").value="";
-  renderStatusButtons();renderImagePreview();
-  document.getElementById("dayModal").classList.add("open");
-}
+function openDayModal(key,d){if(!activeEmpId)return alert("أضف موظف أولاً من زر الموظفين");selectedDateKey=key;const rec=records[key]||{};tempStatus=(rec.status==="perm"?"perm_in":rec.status)||"work";tempImage=rec.image||null;document.getElementById("modalDateTitle").textContent=d+" "+MONTHS_AR[currentMonth]+" "+currentYear;document.getElementById("dayNote").value=rec.note||"";document.getElementById("permTime").value=rec.time||"";document.getElementById("dayImageInput").value="";renderStatusButtons();renderImagePreview();document.getElementById("dayModal").classList.add("open");}
+function renderStatusButtons(){document.getElementById("statusOptions").innerHTML=Object.entries(STATUS_META).map(([k,m])=>'<button type="button" class="st-btn '+(tempStatus===k?"active":"")+'" onclick="tempStatus=\''+k+'\';renderStatusButtons()">'+customIcons[k]+' '+m.label+'</button>').join("");document.getElementById("permTimeBox").classList.toggle("hidden",tempStatus!=="perm_in"&&tempStatus!=="perm_out");}
 
-function renderStatusButtons(){
-  document.getElementById("statusOptions").innerHTML=Object.entries(STATUS_META).map(function(entry){const k=entry.at(0),m=entry.at(1);return'<button type="button" class="st-btn '+(tempStatus===k?"active":"")+'" onclick="tempStatus=\''+k+'\';renderStatusButtons()">'+customIcons[k]+' '+m.label+'</button>';}).join("");
-}
 
 function handleImageUpload(e){
   const f=e.target.files.item(0);if(!f)return;
@@ -227,14 +214,7 @@ function renderImagePreview(){
   document.getElementById("imagePreviewContainer").innerHTML=tempImage?'<img src="'+tempImage+'" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:6px" onclick="window.open(this.src)"/>':"";
 }
 
-async function saveDayData(){
-  const note=document.getElementById("dayNote").value.trim();
-  const payload={date:selectedDateKey,status:tempStatus,note:note,image:tempImage};
-  await fb("/records/"+activeEmpId+"/"+selectedDateKey,"PUT",payload);
-  records[selectedDateKey]=payload;
-  document.getElementById("dayModal").classList.remove("open");
-  renderCalendar();updateStats();
-}
+async function saveDayData(){const note=document.getElementById("dayNote").value.trim(),time=(tempStatus==="perm_in"||tempStatus==="perm_out")?document.getElementById("permTime").value:"",payload={date:selectedDateKey,status:tempStatus,time,note,image:tempImage};await fb("/records/"+activeEmpId+"/"+selectedDateKey,"PUT",payload);records[selectedDateKey]=payload;document.getElementById("dayModal").classList.remove("open");renderCalendar();updateStats();}
 
 async function clearDayData(){
   await fb("/records/"+activeEmpId+"/"+selectedDateKey,"DELETE");
