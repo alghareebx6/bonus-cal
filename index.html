@@ -24,8 +24,9 @@ body.dark{--bg:#0f172a;--card:#1e293b;--border:#475569;color:#f8fafc}body.dark .
 <div class="top-bar">
 <div id="adminControls" class="hidden" style="flex:1;min-width:180px"><label style="font-size:12px;font-weight:700">اختر الموظف:</label><select id="empSelect" style="margin:0"></select></div>
 <div id="empTitleBox" class="hidden"><strong style="font-size:17px;color:#1e3a8a" id="empWelcome"></strong></div>
-<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn-outline" onclick="openIconsModal()">🎨 الرموز</button><button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()">👥 الموظفين</button><button type="button" class="btn-danger" onclick="location.reload()">خروج</button><button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()">🌙 داكن</button>
-/div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn-outline" onclick="openIconsModal()">🎨 الرموز</button><button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()">🌙 داكن</button><button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()">👥 الموظفين</button><button type="button" class="btn-danger" onclick="location.reload()">خروج</button></div>
+<button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()" style="margin-bottom:6px">🌙 تبديل الخلفية (داكن / فاتح)</button>
+  
 </div>
 <div class="stats-grid">
 <div class="stat-box"><span>هدف البونص</span><strong>180</strong></div>
