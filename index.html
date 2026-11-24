@@ -6,7 +6,9 @@
 <meta name="apple-mobile-web-app-title" content="تقويم البونص"/>
 <title>تقويم البونص</title>
 <style>
-:root{--primary:#1e3a8a;--bg:#f1f5f9;--card:#fff;--border:#94a3b8}*{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}body{margin:0;padding:12px;background:var(--bg);color:#0f172a}body.dark{--bg:#0f172a;--card:#1e293b;--border:#475569;color:#f8fafc}body.dark .cal-table,body.dark .stat-box,body.dark input,body.dark select,body.dark textarea,body.dark .modal,body.dark .st-btn,body.dark .btn-outline{background:#1e293b;color:#f8fafc;border-color:#475569}body.dark td.empty{background:#0f172a}.container{max-width:720px;margin:0 auto}.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid #cbd5e1;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.06)}.login-box{max-width:380px;margin:50px auto;text-align:center}input,select,textarea{width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:15px;margin-bottom:10px}.btn{background:var(--primary);color:#fff;border:none;padding:11px 14px;border-radius:8px;cursor:pointer;font-weight:700;font-size:15px}.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}.btn-danger{background:#dc2626;color:#fff;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-top:10px}.stat-box{background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:8px}.stat-box span{display:block;font-size:11px;color:#475569}.stat-box strong{font-size:20px;color:var(--primary)}.stat-box.deduct strong{color:#dc2626}.stat-box.remain strong{color:#16a34a}.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}table.cal-table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}.cal-table th{background:#1e3a8a;color:#fff;padding:8px 2px;font-size:12px;border:1px solid #64748b}.cal-table td{border:1px solid var(--border);height:68px;vertical-align:top;padding:4px;cursor:pointer;position:relative}.cal-table td.empty{background:#f8fafc;cursor:default}.day-num{font-size:13px;font-weight:700}.day-icon{font-size:18px;text-align:center;margin-top:1px}.has-attach{position:absolute;top:3px;left:3px;font-size:12px}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:14px;z-index:100}.modal-backdrop.open{display:flex}.modal{background:#fff;width:100%;max-width:440px;border-radius:14px;padding:16px;max-height:90vh;overflow-y:auto}.status-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}.st-btn{border:1.5px solid #cbd5e1;background:#f8fafc;padding:8px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}.st-btn.active{border-color:var(--primary);background:#dbeafe;color:#1e3a8a}.emp-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #e2e8f0}.icon-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9}.icon-pick{font-size:18px;padding:4px 7px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#fff;margin-left:3px}.icon-pick.selected{border:2px solid var(--primary);background:#dbeafe}.hidden{display:none!important}
+:root{--primary:#1e3a8a;--bg:#f1f5f9;--card:#fff;--border:#94a3b8}*{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}body{margin:0;padding:12px;background:var(--bg);color:#0f172a}.container{max-width:720px;margin:0 auto}.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid #cbd5e1;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.06)}.login-box{max-width:380px;margin:50px auto;text-align:center}input,select,textarea{width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:15px;margin-bottom:10px}.btn{background:var(--primary);color:#fff;border:none;padding:11px 14px;border-radius:8px;cursor:pointer;font-weight:700;font-size:15px}.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}.btn-danger{background:#dc2626;color:#fff;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-top:10px}.stat-box{background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:8px}.stat-box span{display:block;font-size:11px;color:#475569}.stat-box strong{font-size:20px;color:var(--primary)}.stat-box.deduct strong{color:#dc2626}.stat-box.remain strong{color:#16a34a}.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}table.cal-table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}.cal-table th{background:#1e3a8a;color:#fff;padding:8px 2px;font-size:12px;border:1px solid #64748b}.cal-table td{border:1px solid var(--border);height:66px;vertical-align:top;padding:4px;cursor:pointer;position:relative}.cal-table td.empty{background:#f8fafc;cursor:default}.day-num{font-size:13px;font-weight:700}.day-icon{font-size:20px;text-align:center;margin-top:2px}.has-attach{position:absolute;top:3px;left:3px;font-size:12px}td.st-work{background:#f0fdf4}td.st-sick{background:#fef2f2}td.st-absent{background:#fff1f2}td.st-perm{background:#fffbeb}td.st-annual{background:#eff6ff}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:14px;z-index:100}.modal-backdrop.open{display:flex}.modal{background:#fff;width:100%;max-width:440px;border-radius:14px;padding:16px;max-height:90vh;overflow-y:auto}.status-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}.st-btn{border:1.5px solid #cbd5e1;background:#f8fafc;padding:8px;border-radius:8px;cursor:pointer;font-weight:700}.st-btn.active{border-color:var(--primary);background:#dbeafe}.emp-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #e2e8f0}.icon-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9}.icon-pick{font-size:18px;padding:4px 7px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#fff;margin-left:3px}.icon-pick.selected{border:2px solid var(--primary);background:#dbeafe}.hidden{display:none!important}
+body.dark{--bg:#0f172a;--card:#1e293b;--border:#475569;color:#f8fafc}body.dark .cal-table,body.dark .stat-box,body.dark input,body.dark select,body.dark textarea,body.dark .modal,body.dark .st-btn,body.dark .btn-outline{background:#1e293b;color:#f8fafc;border-color:#475569}body.dark td.empty{background:#0f172a}
+
 </style>
 </head>
 <body>
@@ -23,6 +25,8 @@
 <div id="adminControls" class="hidden" style="flex:1;min-width:180px"><label style="font-size:12px;font-weight:700">اختر الموظف:</label><select id="empSelect" style="margin:0"></select></div>
 <div id="empTitleBox" class="hidden"><strong style="font-size:17px;color:#1e3a8a" id="empWelcome"></strong></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn-outline" onclick="openIconsModal()">🎨 الرموز</button><button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()">🌙 داكن</button><button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()">👥 الموظفين</button><button type="button" class="btn-danger" onclick="location.reload()">خروج</button></div>
+<button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()" style="margin-bottom:6px">🌙 تبديل الخلفية (داكن / فاتح)</button>
+  
 </div>
 <div class="stats-grid">
 <div class="stat-box"><span>هدف البونص</span><strong>180</strong></div>
@@ -34,18 +38,223 @@
 <div style="border:2px solid #94a3b8;border-radius:10px;overflow:hidden"><table class="cal-table"><thead><tr><th>الأحد</th><th>الإثنين</th><th>الثلاثاء</th><th>الأربعاء</th><th>الخميس</th><th>الجمعة</th><th>السبت</th></tr></thead><tbody id="calBody"></tbody></table></div>
 </div>
 <div class="modal-backdrop" id="empModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">👥 إضافة وإدارة الموظفين</h3><input type="text" id="newEmpName" placeholder="اسم الموظف (مثلاً: أحمد)"/><input type="text" id="newEmpUser" placeholder="اليوزر للدخول (مثلاً: ahmed)"/><input type="text" id="newEmpPin" placeholder="الرقم السري (مثلاً: 1234)"/><button type="button" class="btn" style="width:100%;margin-bottom:12px" onclick="addEmployee()">+ إضافة موظف</button><div id="empList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn-outline" onclick="document.getElementById('empModal').classList.remove('open')">إغلاق</button></div></div></div>
-<div class="modal-backdrop" id="iconsModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص الرموز والألوان</h3><div id="iconSettingsList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div></div></div>
-<div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><div id="permTimeBox" class="hidden" style="margin-bottom:10px"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">⏰ وقت الاستئذان:</label><input type="time" id="permTime" style="margin:0"/></div><textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
+<div class="modal-backdrop" id="iconsModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص أشكال الرموز</h3><div id="iconSettingsList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div></div></div>
+<div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
 <script>
-const DB="https://"+"bonus-cal-default-rtdb"+".firebaseio.com";
+const FB_URL="https://firebaseio.com";
 const ADMIN_USER="admin";
 const ADMIN_PIN="9999";
-function toEn(s){const ar="٠١٢٣٤٥٦٧٨٩";let out="",str=String(s||"").trim();for(let i=0;i<str.length;i++){const ch=str.charAt(i),idx=ar.indexOf(ch);out+=idx>=0?String(idx):ch;}return out;}
-async function fb(path,method,body){const res=await fetch(DB+path+".json",{method:method||"GET",headers:{"Content-Type":"application/json"},body:body!==undefined?JSON.stringify(body):undefined});if(!res.ok)throw new Error("خطأ في الخادم: "+res.status);return await res.json();}
-const MONTHS_AR=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-const STATUS_META={work:{label:"يوم عمل",deduct:false,choices:["✅","💼","🏢","⭐","👍"]},sick:{label:"إجازة مرضية",deduct:true,choices:["➕","🏥","🩺","💊","🩹"]},absent:{label:"غياب",deduct:true,choices:["❌","🚫","⛔","❗","🔴"]},perm_in:{label:"استئذان دخول",deduct:true,choices:["🕒","🌅","🚪","⏳","➡️"]},perm_out:{label:"استئذان خروج",deduct:true,choices:["🕔","🌇","🏃","⏳","⬅️"]},annual:{label:"إجازة دورية",deduct:true,choices:["🌴","✈️","🏖️","☀️","🗓️"]}};
-let customIcons={work:"✅",sick:"➕",absent:"❌",perm_in:"🕒",perm_out:"🕔",annual:"🌴"};
-try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=Object.assign(customIcons,JSON.parse(saved));}catch(e){}
-let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm_in:"#fef3c7",perm_out:"#ffedd5",annual:"#dbeafe"};
-try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=Object.assign(customColors,JSON.parse(sc));}catch(e){}
-let employees=[],activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
+const DB="https://"+"bonus-cal-default-rtdb"+".firebaseio.com";
+
+function toEn(s){
+  const ar="٠١٢٣٤٥٦٧٨٩";
+  let out="";
+  const str=String(s||"").trim();
+  for(let i=0;i<str.length;i++){
+    const ch=str.charAt(i);
+    const idx=ar.indexOf(ch);
+    out+=idx>=0?String(idx):ch;
+  }
+  return out;
+}
+async function fb(path,method,body){
+  const res=await fetch(DB+path+".json",{
+    method:method||"GET",
+    headers:{"Content-Type":"application/json"},
+    body:body!==undefined?JSON.stringify(body):undefined
+  });
+  if(!res.ok)throw new Error("خطأ في الخادم: "+res.status);
+  return await res.json();
+}
+const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
+const STATUS_META={
+  work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
+  sick:{label:"إجازة مرضية",deduct:true,choices:new Array("➕","🏥","🩺","💊","🩹")},
+  absent:{label:"غياب",deduct:true,choices:new Array("❌","🚫","⛔","❗","🔴")},
+  perm:{label:"استئذان",deduct:true,choices:new Array("🕒","🏃","🚪","⏳","⚠️")},
+  annual:{label:"إجازة دورية",deduct:true,choices:new Array("🌴","✈️","🏖️","☀️","🗓️")}
+};
+let customIcons={work:"✅",sick:"➕",absent:"❌",perm:"🕒",annual:"🌴"};
+try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=JSON.parse(saved);}catch(e){}
+let employees=new Array(),activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
+let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm:"#fef3c7",annual:"#dbeafe"};
+try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=JSON.parse(sc);}catch(e){}
+
+document.getElementById("loginBtn").onclick=async function(){
+  const u=toEn(document.getElementById("loginUser").value).toLowerCase();
+  const p=toEn(document.getElementById("loginPin").value);
+  const err=document.getElementById("loginError");
+  err.textContent="";
+  if(!u||!p){err.textContent="اكتب اليوزر والرقم السري";return;}
+  if(u===ADMIN_USER && p===ADMIN_PIN){
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appScreen").classList.remove("hidden");
+    document.getElementById("adminControls").classList.remove("hidden");
+    document.getElementById("manageEmpBtn").classList.remove("hidden");
+    renderCalendar();
+    await loadEmployees();
+    return;
+  }
+  err.textContent="جاري التحقق...";
+  try{
+    const data=await fb("/employees");
+    const list=data?Object.values(data):new Array();
+    const emp=list.find(function(x){return x&&x.username===u&&x.pin===p;});
+    if(!emp){err.textContent="اليوزر أو الرقم السري غير صحيح";return;}
+    activeEmpId=emp.id;
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appScreen").classList.remove("hidden");
+    document.getElementById("empTitleBox").classList.remove("hidden");
+    document.getElementById("empWelcome").textContent="الموظف: "+emp.name;
+    await loadEmployeeRecords(activeEmpId);
+  }catch(e){err.textContent=e.message;}
+};
+
+document.getElementById("empSelect").onchange=function(){activeEmpId=this.value;loadEmployeeRecords(this.value);};
+
+async function loadEmployees(){
+  try{
+    const data=await fb("/employees");
+    employees=data?Object.values(data).filter(Boolean):new Array();
+    const sel=document.getElementById("empSelect");
+    sel.innerHTML=employees.length
+      ? employees.map(function(e){return'<option value="'+e.id+'">'+e.name+' ('+e.username+')</option>';}).join("")
+      : '<option value="">لا يوجد موظفين - أضف موظفاً</option>';
+    const firstEmp=employees.at(0);
+    if(firstEmp){
+      if(!activeEmpId||!employees.some(function(x){return x.id===activeEmpId;})) activeEmpId=firstEmp.id;
+      sel.value=activeEmpId;
+      await loadEmployeeRecords(activeEmpId);
+    }else{records={};renderCalendar();updateStats();}
+  }catch(e){alert(e.message);}
+}
+
+async function loadEmployeeRecords(empId){
+  const data=await fb("/records/"+empId);
+  records=data||{};
+  renderCalendar();updateStats();
+}
+
+function openEmpModal(){renderEmpList();document.getElementById("empModal").classList.add("open");}
+function renderEmpList(){
+  document.getElementById("empList").innerHTML=employees.map(function(e){return'<div class="emp-item"><div><strong>'+e.name+'</strong><br><small>اليوزر: '+e.username+' | الرقم السري: '+e.pin+'</small></div><button type="button" class="btn-danger" onclick="deleteEmployee(\''+e.id+'\')">حذف</button></div>';}).join("");
+}
+
+async function addEmployee(){
+  const name=document.getElementById("newEmpName").value.trim();
+  const username=toEn(document.getElementById("newEmpUser").value).toLowerCase();
+  const pin=toEn(document.getElementById("newEmpPin").value);
+  if(!name||!username||!pin)return alert("عبّ جميع الخانات");
+  if(employees.some(function(x){return x.username===username;}))return alert("هذا اليوزر مستخدم لموظف آخر");
+  const id="emp_"+Date.now();
+  try{
+    await fb("/employees/"+id,"PUT",{id:id,name:name,username:username,pin:pin});
+    document.getElementById("newEmpName").value="";
+    document.getElementById("newEmpUser").value="";
+    document.getElementById("newEmpPin").value="";
+    await loadEmployees();renderEmpList();
+  }catch(e){alert(e.message);}
+}
+
+async function deleteEmployee(id){
+  if(!confirm("متأكد تبي تحذف الموظف وسجلاته؟"))return;
+  await fb("/employees/"+id,"DELETE");
+  await fb("/records/"+id,"DELETE");
+  if(activeEmpId===id)activeEmpId=null;
+  await loadEmployees();renderEmpList();
+}
+
+function updateStats(){
+  let d=0;
+  Object.values(records).forEach(function(r){if(r&&STATUS_META[r.status]&&STATUS_META[r.status].deduct)d++;});
+  document.getElementById("deductedCount").textContent=d;
+  document.getElementById("remainingCount").textContent=Math.max(0,180-d);
+}
+
+function renderCalendar(){
+  document.getElementById("monthLabel").textContent=MONTHS_AR.at(currentMonth)+" "+currentYear;
+  const tbody=document.getElementById("calBody");tbody.innerHTML="";
+  const first=new Date(currentYear,currentMonth,1).getDay();
+  const days=new Date(currentYear,currentMonth+1,0).getDate();
+  let day=1;
+  for(let r=0;r<6&&day<=days;r++){
+    const tr=document.createElement("tr");
+    for(let c=0;c<7;c++){
+      const td=document.createElement("td");
+      if((r===0&&c<first)||day>days){td.className="empty";}
+      else{
+        const d=day;
+        const key=currentYear+"-"+String(currentMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+        const rec=records[key];
+        if(rec&&rec.status)td.classList.add("st-"+rec.status);
+                        const t=new Date(),isT=(d===t.getDate()&&currentMonth===t.getMonth()&&currentYear===t.getFullYear());if(isT)td.style.border="3px solid #1e3a8a";td.innerHTML='<div class="day-num">'+(isT?'🔵 '+d:d)+'</div>'+(rec&&rec.status?'<div class="day-icon">'+customIcons[rec.status]+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
+
+        td.onclick=function(){openDayModal(key,d);};
+        day++;
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function changeMonth(delta){currentMonth+=delta;if(currentMonth<0){currentMonth=11;currentYear--;}if(currentMonth>11){currentMonth=0;currentYear++;}renderCalendar();}
+
+function openDayModal(key,d){
+  if(!activeEmpId)return alert("أضف موظف أولاً من زر الموظفين");
+  selectedDateKey=key;
+  const rec=records[key]||{};
+  tempStatus=rec.status||"work";tempImage=rec.image||null;
+  document.getElementById("modalDateTitle").textContent=d+" "+MONTHS_AR.at(currentMonth)+" "+currentYear;
+  document.getElementById("dayNote").value=rec.note||"";
+  document.getElementById("dayImageInput").value="";
+  renderStatusButtons();renderImagePreview();
+  document.getElementById("dayModal").classList.add("open");
+}
+
+function renderStatusButtons(){
+  document.getElementById("statusOptions").innerHTML=Object.entries(STATUS_META).map(function(entry){const k=entry.at(0),m=entry.at(1);return'<button type="button" class="st-btn '+(tempStatus===k?"active":"")+'" onclick="tempStatus=\''+k+'\';renderStatusButtons()">'+customIcons[k]+' '+m.label+'</button>';}).join("");
+}
+
+function handleImageUpload(e){
+  const f=e.target.files.item(0);if(!f)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){tempImage=ev.target.result;renderImagePreview();};
+  reader.readAsDataURL(f);
+}
+
+function renderImagePreview(){
+  document.getElementById("imagePreviewContainer").innerHTML=tempImage?'<img src="'+tempImage+'" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:6px" onclick="window.open(this.src)"/>':"";
+}
+
+async function saveDayData(){
+  const note=document.getElementById("dayNote").value.trim();
+  const payload={date:selectedDateKey,status:tempStatus,note:note,image:tempImage};
+  await fb("/records/"+activeEmpId+"/"+selectedDateKey,"PUT",payload);
+  records[selectedDateKey]=payload;
+  document.getElementById("dayModal").classList.remove("open");
+  renderCalendar();updateStats();
+}
+
+async function clearDayData(){
+  await fb("/records/"+activeEmpId+"/"+selectedDateKey,"DELETE");
+  delete records[selectedDateKey];
+  document.getElementById("dayModal").classList.remove("open");
+  renderCalendar();updateStats();
+}
+
+function openIconsModal(){  document.getElementById("iconSettingsList").innerHTML=Object.entries(STATUS_META).map(function(entry){
+    const k=entry.at(0),m=entry.at(1);
+    return'<div class="icon-row"><div><strong>'+m.label+'</strong><br><input type="color" value="'+customColors[k]+'" onchange="setColor(\''+k+'\',this.value)" style="width:45px;height:28px;padding:0;border:none;margin-top:4px;cursor:pointer"/></div><div>'+m.choices.map(function(ic){return'<button type="button" class="icon-pick '+(customIcons[k]===ic?"selected":"")+'" onclick="setIcon(\''+k+'\',\''+ic+'\')">'+ic+'</button>';}).join("")+'</div></div>';
+  }).join("");
+  document.getElementById("iconsModal").classList.add("open");
+}
+
+function setIcon(k,ic){customIcons[k]=ic;try{localStorage.setItem("bonus_icons",JSON.stringify(customIcons));}catch(e){}openIconsModal();renderCalendar();}
+function setColor(k,col){customColors[k]=col;try{localStorage.setItem("bonus_colors",JSON.stringify(customColors));}catch(e){}renderCalendar();}
+function toggleTheme(){const d=document.body.classList.toggle("dark");document.getElementById("themeBtn").textContent=d?"☀️ فاتح":"🌙 داكن";try{localStorage.setItem("bonus_theme",d?"dark":"light");}catch(e){}}
+try{if(localStorage.getItem("bonus_theme")==="dark")toggleTheme();}catch(e){}
+
+</script>
+</body>
+</html>
