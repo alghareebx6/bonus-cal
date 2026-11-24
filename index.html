@@ -149,7 +149,8 @@ async function addEmployee(){
     document.getElementById("newEmpUser").value="";
     document.getElementById("newEmpPin").value="";
     await loadEmployees();renderEmpList();
-  }catch(e){alert("اليوزر مستخدم مسبقاً أو حدث خطأ");}
+}catch(e){alert(e.message);}
+
 }
 
 async function deleteEmployee(id){
