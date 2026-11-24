@@ -132,17 +132,16 @@ const ADMIN_USER="admin";
 const ADMIN_PIN="9999";
 function toEn(s){const ar="٠١٢٣٤٥٦٧٨٩";let out="",str=String(s||"").trim();for(let i=0;i<str.length;i++){const ch=str.charAt(i),idx=ar.indexOf(ch);out+=idx>=0?String(idx):ch;}return out;}
 async function fb(path,method,body){const res=await fetch(DB+path+".json",{method:method||"GET",headers:{"Content-Type":"application/json"},body:body!==undefined?JSON.stringify(body):undefined});if(!res.ok)throw new Error("خطأ في الخادم: "+res.status);return await res.json();}
-const MONTHS_AR=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
 const STATUS_META={
-work:{label:"يوم عمل",deduct:false,choices:["✅","💼","🏢","⭐","👍"]},
-sick:{label:"إجازة مرضية",deduct:true,choices:["➕","🏥","🩺","💊","🩹"]},
-absent:{label:"غياب",deduct:true,choices:["❌","🚫","⛔","❗","🔴"]},
-perm_in:{label:"استئذان دخول",deduct:true,choices:["🕒","🌅","🚪","⏳","➡️"]},
-perm_out:{label:"استئذان خروج",deduct:true,choices:["🕔","🌇","🏃","⏳","⬅️"]},
-annual:{label:"إجازة دورية",deduct:true,choices:["🌴","✈️","🏖️","☀️","🗓️"]}
+work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
+sick:{label:"إجازة مرضية",deduct:true,choices:new Array("➕","🏥","🩺","💊","🩹")},
+absent:{label:"غياب",deduct:true,choices:new Array("❌","🚫","⛔","❗","🔴")},
+perm_in:{label:"استئذان دخول",deduct:true,choices:new Array("🕒","🌅","🚪","⏳","➡️")},
+perm_out:{label:"استئذان خروج",deduct:true,choices:new Array("🕔","🌇","🏃","⏳","⬅️")},
+annual:{label:"إجازة دورية",deduct:true,choices:new Array("🌴","✈️","🏖️","☀️","🗓️")}
 };
 let customIcons={work:"✅",sick:"➕",absent:"❌",perm_in:"🕒",perm_out:"🕔",annual:"🌴"};
 try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=Object.assign(customIcons,JSON.parse(saved));}catch(e){}
 let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm_in:"#fef3c7",perm_out:"#ffedd5",annual:"#dbeafe"};
 try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=Object.assign(customColors,JSON.parse(sc));}catch(e){}
-let employees=[],activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
