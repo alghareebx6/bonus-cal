@@ -73,6 +73,8 @@ const STATUS_META={
 let customIcons={work:"✅",sick:"➕",absent:"❌",perm:"🕒",annual:"🌴"};
 try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=JSON.parse(saved);}catch(e){}
 let employees=new Array(),activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
+let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm:"#fef3c7",annual:"#dbeafe"};
+try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=JSON.parse(sc);}catch(e){}
 
 document.getElementById("loginBtn").onclick=async function(){
   const u=toEn(document.getElementById("loginUser").value).toLowerCase();
