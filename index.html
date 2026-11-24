@@ -37,11 +37,10 @@
 <div class="modal-backdrop" id="iconsModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص أشكال الرموز</h3><div id="iconSettingsList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div></div></div>
 <div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
 <script>
-const SB_URL="https://supabase.co";
-const SB_KEY="sb_publishable_cR3UAo9n5-2yBUqsmIc-bA_0jUNQyPf";
+const FB_URL="https://firebaseio.com";
 const ADMIN_USER="admin";
 const ADMIN_PIN="9999";
-
+const DB="https://firebaseio.com";
 function toEn(s){
   const ar="٠١٢٣٤٥٦٧٨٩";
   let out="";
@@ -53,19 +52,15 @@ function toEn(s){
   }
   return out;
 }
-
-async function api(path,opts){
-  opts=opts||{};
-  const res=await fetch(SB_URL+path,{
-    method:opts.method||"GET",
-    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation"},
-    body:opts.body?JSON.stringify(opts.body):undefined
+async function fb(path,method,body){
+  const res=await fetch(DB+path+".json",{
+    method:method||"GET",
+    headers:{"Content-Type":"application/json"},
+    body:body!==undefined?JSON.stringify(body):undefined
   });
-  if(!res.ok)throw new Error(await res.text());
-  const txt=await res.text();
-  return txt?JSON.parse(txt):new Array();
+  if(!res.ok)throw new Error("خطأ في الخادم: "+res.status);
+  return await res.json();
 }
-
 const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
 const STATUS_META={
   work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
@@ -95,8 +90,9 @@ document.getElementById("loginBtn").onclick=async function(){
   }
   err.textContent="جاري التحقق...";
   try{
-    const rows=await api("/employees?username=eq."+encodeURIComponent(u)+"&pin=eq."+encodeURIComponent(p)+"&select=*");
-    const emp=rows.at(0);
+    const data=await fb("/employees");
+    const list=data?Object.values(data):new Array();
+    const emp=list.find(function(x){return x&&x.username===u&&x.pin===p;});
     if(!emp){err.textContent="اليوزر أو الرقم السري غير صحيح";return;}
     activeEmpId=emp.id;
     document.getElementById("loginScreen").classList.add("hidden");
@@ -104,14 +100,15 @@ document.getElementById("loginBtn").onclick=async function(){
     document.getElementById("empTitleBox").classList.remove("hidden");
     document.getElementById("empWelcome").textContent="الموظف: "+emp.name;
     await loadEmployeeRecords(activeEmpId);
-  }catch(e){err.textContent="تعذر الاتصال: "+e.message;}
+  }catch(e){err.textContent=e.message;}
 };
 
 document.getElementById("empSelect").onchange=function(){activeEmpId=this.value;loadEmployeeRecords(this.value);};
 
 async function loadEmployees(){
   try{
-    employees=await api("/employees?select=*&order=created_at.asc");
+    const data=await fb("/employees");
+    employees=data?Object.values(data).filter(Boolean):new Array();
     const sel=document.getElementById("empSelect");
     sel.innerHTML=employees.length
       ? employees.map(function(e){return'<option value="'+e.id+'">'+e.name+' ('+e.username+')</option>';}).join("")
@@ -122,13 +119,12 @@ async function loadEmployees(){
       sel.value=activeEmpId;
       await loadEmployeeRecords(activeEmpId);
     }else{records={};renderCalendar();updateStats();}
-  }catch(e){alert("خطأ: "+e.message);}
+  }catch(e){alert(e.message);}
 }
 
 async function loadEmployeeRecords(empId){
-  const rows=await api("/records?emp_id=eq."+encodeURIComponent(empId)+"&select=*");
-  records={};
-  rows.forEach(function(r){records[r.date]=r;});
+  const data=await fb("/records/"+empId);
+  records=data||{};
   renderCalendar();updateStats();
 }
 
@@ -142,27 +138,28 @@ async function addEmployee(){
   const username=toEn(document.getElementById("newEmpUser").value).toLowerCase();
   const pin=toEn(document.getElementById("newEmpPin").value);
   if(!name||!username||!pin)return alert("عبّ جميع الخانات");
+  if(employees.some(function(x){return x.username===username;}))return alert("هذا اليوزر مستخدم لموظف آخر");
+  const id="emp_"+Date.now();
   try{
-    await api("/employees",{method:"POST",body:{id:"emp_"+Date.now(),name:name,username:username,pin:pin}});
-
+    await fb("/employees/"+id,"PUT",{id:id,name:name,username:username,pin:pin});
     document.getElementById("newEmpName").value="";
     document.getElementById("newEmpUser").value="";
     document.getElementById("newEmpPin").value="";
     await loadEmployees();renderEmpList();
-}catch(e){alert(e.message);}
-
+  }catch(e){alert(e.message);}
 }
 
 async function deleteEmployee(id){
   if(!confirm("متأكد تبي تحذف الموظف وسجلاته؟"))return;
-  await api("/employees?id=eq."+encodeURIComponent(id),{method:"DELETE"});
+  await fb("/employees/"+id,"DELETE");
+  await fb("/records/"+id,"DELETE");
   if(activeEmpId===id)activeEmpId=null;
   await loadEmployees();renderEmpList();
 }
 
 function updateStats(){
   let d=0;
-  Object.values(records).forEach(function(r){if(STATUS_META[r.status]&&STATUS_META[r.status].deduct)d++;});
+  Object.values(records).forEach(function(r){if(r&&STATUS_META[r.status]&&STATUS_META[r.status].deduct)d++;});
   document.getElementById("deductedCount").textContent=d;
   document.getElementById("remainingCount").textContent=Math.max(0,180-d);
 }
@@ -224,17 +221,15 @@ function renderImagePreview(){
 
 async function saveDayData(){
   const note=document.getElementById("dayNote").value.trim();
-  const id=activeEmpId+"_"+selectedDateKey;
-  const payload={id:id,emp_id:activeEmpId,date:selectedDateKey,status:tempStatus,note:note,image:tempImage};
-  await api("/records",{method:"POST",prefer:"resolution=merge-duplicates",body:payload});
+  const payload={date:selectedDateKey,status:tempStatus,note:note,image:tempImage};
+  await fb("/records/"+activeEmpId+"/"+selectedDateKey,"PUT",payload);
   records[selectedDateKey]=payload;
   document.getElementById("dayModal").classList.remove("open");
   renderCalendar();updateStats();
 }
 
 async function clearDayData(){
-  const id=activeEmpId+"_"+selectedDateKey;
-  await api("/records?id=eq."+encodeURIComponent(id),{method:"DELETE"});
+  await fb("/records/"+activeEmpId+"/"+selectedDateKey,"DELETE");
   delete records[selectedDateKey];
   document.getElementById("dayModal").classList.remove("open");
   renderCalendar();updateStats();
