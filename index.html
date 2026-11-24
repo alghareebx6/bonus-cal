@@ -239,12 +239,16 @@ async function clearDayData(){
   renderCalendar();updateStats();
 }
 
-function openIconsModal(){
-  document.getElementById("iconSettingsList").innerHTML=Object.entries(STATUS_META).map(function(entry){const k=entry.at(0),m=entry.at(1);return'<div class="icon-row"><strong>'+m.label+'</strong><div>'+m.choices.map(function(ic){return'<button type="button" class="icon-pick '+(customIcons[k]===ic?"selected":"")+'" onclick="setIcon(\''+k+'\',\''+ic+'\')">'+ic+'</button>';}).join("")+'</div></div>';}).join("");
+function openIconsModal(){  document.getElementById("iconSettingsList").innerHTML=Object.entries(STATUS_META).map(function(entry){
+    const k=entry.at(0),m=entry.at(1);
+    return'<div class="icon-row"><div><strong>'+m.label+'</strong><br><input type="color" value="'+customColors[k]+'" onchange="setColor(\''+k+'\',this.value)" style="width:45px;height:28px;padding:0;border:none;margin-top:4px;cursor:pointer"/></div><div>'+m.choices.map(function(ic){return'<button type="button" class="icon-pick '+(customIcons[k]===ic?"selected":"")+'" onclick="setIcon(\''+k+'\',\''+ic+'\')">'+ic+'</button>';}).join("")+'</div></div>';
+  }).join("");
   document.getElementById("iconsModal").classList.add("open");
 }
 
 function setIcon(k,ic){customIcons[k]=ic;try{localStorage.setItem("bonus_icons",JSON.stringify(customIcons));}catch(e){}openIconsModal();renderCalendar();}
+function setColor(k,col){customColors[k]=col;try{localStorage.setItem("bonus_colors",JSON.stringify(customColors));}catch(e){}renderCalendar();}
+
 </script>
 </body>
 </html>
