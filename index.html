@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#1e3a8a"/><meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="تقويم البونص"/>
+<title>تقويم البونص</title>
+<style>
+:root{--primary:#1e3a8a;--bg:#f1f5f9;--card:#fff;--border:#94a3b8}*{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}body{margin:0;padding:12px;background:var(--bg);color:#0f172a}.container{max-width:720px;margin:0 auto}.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid #cbd5e1;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.06)}.login-box{max-width:380px;margin:50px auto;text-align:center}input,select,textarea{width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:15px;margin-bottom:10px}.btn{background:var(--primary);color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;font-size:15px}.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px}.btn-danger{background:#dc2626;color:#fff;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-top:10px}.stat-box{background:#f8fafc;border:1px solid #cbd5e1;border-radius:8px;padding:8px}.stat-box span{display:block;font-size:11px;color:#475569}.stat-box strong{font-size:20px;color:var(--primary)}.stat-box.deduct strong{color:#dc2626}.stat-box.remain strong{color:#16a34a}.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}table.cal-table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}.cal-table th{background:#1e3a8a;color:#fff;padding:8px 2px;font-size:12px;border:1px solid #64748b}.cal-table td{border:1px solid var(--border);height:66px;vertical-align:top;padding:4px;cursor:pointer;position:relative}.cal-table td.empty{background:#f8fafc;cursor:default}.day-num{font-size:13px;font-weight:700}.day-icon{font-size:20px;text-align:center;margin-top:2px}.has-attach{position:absolute;top:3px;left:3px;font-size:12px}td.st-work{background:#f0fdf4}td.st-sick{background:#fef2f2}td.st-absent{background:#fff1f2}td.st-perm{background:#fffbeb}td.st-annual{background:#eff6ff}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:14px;z-index:100}.modal-backdrop.open{display:flex}.modal{background:#fff;width:100%;max-width:440px;border-radius:14px;padding:16px;max-height:90vh;overflow-y:auto}.status-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}.st-btn{border:1.5px solid #cbd5e1;background:#f8fafc;padding:8px;border-radius:8px;cursor:pointer;font-weight:700}.st-btn.active{border-color:var(--primary);background:#dbeafe}.emp-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #e2e8f0}.icon-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9}.icon-pick{font-size:18px;padding:4px 7px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;background:#fff;margin-left:3px}.icon-pick.selected{border:2px solid var(--primary);background:#dbeafe}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="card login-box">
+<h2 style="color:#1e3a8a;margin-top:0">تقويم البونص</h2>
+<input type="text" id="loginUser" placeholder="اسم المستخدم (اليوزر)"/>
+<input type="password" id="loginPin" placeholder="الرقم السري"/>
+<button type="button" class="btn" style="width:100%" onclick="handleLogin()">دخول</button>
+<p id="loginError" style="color:#dc2626;font-size:14px;font-weight:bold"></p>
+</div>
+<div id="appScreen" class="container hidden">
+<div class="card">
+<div class="top-bar">
+<div id="adminControls" class="hidden" style="flex:1;min-width:180px"><label style="font-size:12px;font-weight:700">اختر الموظف:</label><select id="empSelect" onchange="selectEmployee(this.value)" style="margin:0"></select></div>
+<div id="empTitleBox" class="hidden"><strong style="font-size:17px;color:#1e3a8a" id="empWelcome"></strong></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn-outline" onclick="openIconsModal()">🎨 الرموز</button><button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()">👥 الموظفين</button><button type="button" class="btn-danger" onclick="logout()">خروج</button></div>
+</div>
+<div class="stats-grid">
+<div class="stat-box"><span>هدف البونص</span><strong>180</strong></div>
+<div class="stat-box deduct"><span>أيام مخصومة</span><strong id="deductedCount">0</strong></div>
+<div class="stat-box remain"><span>المتبقي للبونص</span><strong id="remainingCount">180</strong></div>
+</div>
+</div>
+<div class="card" style="padding:10px;display:flex;justify-content:space-between;align-items:center"><button type="button" class="btn" onclick="changeMonth(-1)">▶ السابق</button><strong id="monthLabel"></strong><button type="button" class="btn" onclick="changeMonth(1)">التالي ◀</button></div>
+<div style="border:2px solid #94a3b8;border-radius:10px;overflow:hidden"><table class="cal-table"><thead><tr><th>الأحد</th><th>الإثنين</th><th>الثلاثاء</th><th>الأربعاء</th><th>الخميس</th><th>الجمعة</th><th>السبت</th></tr></thead><tbody id="calBody"></tbody></table></div>
+</div>
+<div class="modal-backdrop" id="empModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">👥 إضافة وإدارة الموظفين</h3><input type="text" id="newEmpName" placeholder="اسم الموظف (مثلاً: أحمد)"/><input type="text" id="newEmpUser" placeholder="اليوزر للدخول (مثلاً: ahmed)"/><input type="text" id="newEmpPin" placeholder="الرقم السري (مثلاً: 1234)"/><button type="button" class="btn" style="width:100%;margin-bottom:12px" onclick="addEmployee()">+ إضافة موظف</button><div id="empList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn-outline" onclick="document.getElementById('empModal').classList.remove('open')">إغلاق</button></div></div></div>
+<div class="modal-backdrop" id="iconsModal"><div class="modal"><h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص أشكال الرموز</h3><div id="iconSettingsList"></div><div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div></div></div>
+<div class="modal-backdrop" id="dayModal"><div class="modal"><h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3><div class="status-options" id="statusOptions"></div><textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea><label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label><input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/><div id="imagePreviewContainer"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn-danger" onclick="clearDayData()">مسح</button><button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button><button type="button" class="btn" onclick="saveDayData()">حفظ</button></div></div></div>
+<script>
+const SB_URL="https://supabase.co";
+const SB_KEY="sb_publishable_cR3UAo9n5-2yBUqsmIc-bA_0jUNQyPf";
+const ADMIN_USER="admin";
+const ADMIN_PIN="9999";
+
+function toEn(s){return String(s||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).trim()}
+async function api(path,opts={}){
+  const res=await fetch(SB_URL+path,{
+    method:opts.method||"GET",
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":opts.prefer||"return=representation"}
+    ,body:opts.body?JSON.stringify(opts.body):undefined
+  });
+  if(!res.ok)throw new Error(await res.text());
+  const txt=await res.text();
+  return txt?JSON.parse(txt):[];
+}
+
+const MONTHS_AR=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const STATUS_META={work:{label:"يوم عمل",deduct:false,choices:["✅","💼","🏢","⭐","👍"]},sick:{label:"إجازة مرضية",deduct:true,choices:["➕","🏥","🩺","💊","🩹"]},absent:{label:"غياب",deduct:true,choices:["❌","🚫","⛔","❗","🔴"]},perm:{label:"استئذان",deduct:true,choices:["🕒","🏃","🚪","⏳","⚠️"]},annual:{label:"إجازة دورية",deduct:true,choices:["🌴","✈️","🏖️","☀️","🗓️"]}};
+let customIcons=JSON.parse(localStorage.getItem("bonus_icons")||"null")||{work:"✅",sick:"➕",absent:"❌",perm:"🕒",annual:"🌴"};
+let employees=[],activeEmpId=null,records={},currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth(),selectedDateKey=null,tempStatus="work",tempImage=null;
+
+async function handleLogin(){
+  const u=toEn(document.getElementById("loginUser").value).toLowerCase();
+  const p=toEn(document.getElementById("loginPin").value);
+  const err=document.getElementById("loginError");
+  err.textContent="";
+  if(!u||!p){err.textContent="اكتب اليوزر والرقم السري";return;}
+  if(u===ADMIN_USER && p===ADMIN_PIN){
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appScreen").classList.remove("hidden");
+    document.getElementById("adminControls").classList.remove("hidden");
+    document.getElementById("manageEmpBtn").classList.remove("hidden");
+    renderCalendar();
+    await loadEmployees();
+    return;
+  }
+  err.textContent="جاري التحقق...";
+  try{
+    const rows=await api(`/employees?username=eq.${encodeURIComponent(u)}&pin=eq.${encodeURIComponent(p)}&select=*`);
