@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <meta name="theme-color" content="#1e3a8a"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="تقويم البونص"/>
-<title>تقويم البونص</title>
+<title>Bonus Calendar</title>
 <style>
 :root{--primary:#1e3a8a;--bg:#f1f5f9;--card:#fff;--border:#94a3b8}
 *{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
@@ -50,98 +49,114 @@ table.cal-table{width:100%;border-collapse:collapse;table-layout:fixed;backgroun
 </head>
 <body>
 <div id="loginScreen" class="card login-box">
-<h2 style="color:#1e3a8a;margin-top:0">تقويم البونص</h2>
-<input type="text" id="loginUser" placeholder="اسم المستخدم (اليوزر)"/>
-<input type="password" id="loginPin" placeholder="الرقم السري"/>
-<button type="button" id="loginBtn" class="btn" style="width:100%">دخول</button>
+<h2 id="t_title" style="color:#1e3a8a;margin-top:0"></h2>
+<input type="text" id="loginUser"/>
+<input type="password" id="loginPin"/>
+<button type="button" id="loginBtn" class="btn" style="width:100%"></button>
 <p id="loginError" style="color:#dc2626;font-size:14px;font-weight:bold"></p>
 </div>
 <div id="appScreen" class="container hidden">
 <div class="card">
 <div class="top-bar">
 <div id="adminControls" class="hidden" style="flex:1;min-width:180px">
-<label style="font-size:12px;font-weight:700">اختر الموظف:</label>
+<label id="t_selEmp" style="font-size:12px;font-weight:700"></label>
 <select id="empSelect" style="margin:0"></select>
 </div>
 <div id="empTitleBox" class="hidden"><strong style="font-size:17px;color:#1e3a8a" id="empWelcome"></strong></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap">
-<button type="button" class="btn-outline" onclick="openIconsModal()">🎨 الرموز</button>
-<button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()">🌙 داكن</button>
-<button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()">👥 الموظفين</button>
-<button type="button" class="btn-danger" onclick="location.reload()">خروج</button>
+<button type="button" id="b_icons" class="btn-outline" onclick="openIconsModal()"></button>
+<button type="button" id="themeBtn" class="btn-outline" onclick="toggleTheme()"></button>
+<button type="button" id="manageEmpBtn" class="btn-outline hidden" onclick="openEmpModal()"></button>
+<button type="button" id="b_exit" class="btn-danger" onclick="location.reload()"></button>
 </div>
 </div>
 <div class="stats-grid">
-<div class="stat-box"><span>هدف البونص</span><strong>180</strong></div>
-<div class="stat-box deduct"><span>أيام مخصومة</span><strong id="deductedCount">0</strong></div>
-<div class="stat-box remain"><span>المتبقي للبونص</span><strong id="remainingCount">180</strong></div>
+<div class="stat-box"><span id="t_goal"></span><strong>180</strong></div>
+<div class="stat-box deduct"><span id="t_ded"></span><strong id="deductedCount">0</strong></div>
+<div class="stat-box remain"><span id="t_rem"></span><strong id="remainingCount">180</strong></div>
 </div>
 </div>
 <div class="card" style="padding:10px;display:flex;justify-content:space-between;align-items:center">
-<button type="button" class="btn" onclick="changeMonth(-1)">▶ السابق</button>
+<button type="button" id="b_prev" class="btn" onclick="changeMonth(-1)"></button>
 <strong id="monthLabel"></strong>
-<button type="button" class="btn" onclick="changeMonth(1)">التالي ◀</button>
+<button type="button" id="b_next" class="btn" onclick="changeMonth(1)"></button>
 </div>
 <div style="border:2px solid #94a3b8;border-radius:10px;overflow:hidden">
 <table class="cal-table">
-<thead><tr><th>الأحد</th><th>الإثنين</th><th>الثلاثاء</th><th>الأربعاء</th><th>الخميس</th><th>الجمعة</th><th>السبت</th></tr></thead>
+<thead><tr id="daysHead"></tr></thead>
 <tbody id="calBody"></tbody>
 </table>
 </div>
 </div>
 <div class="modal-backdrop" id="empModal">
 <div class="modal">
-<h3 style="margin-top:0;color:#1e3a8a">👥 إضافة وإدارة الموظفين</h3>
-<input type="text" id="newEmpName" placeholder="اسم الموظف (مثلاً: أحمد)"/>
-<input type="text" id="newEmpUser" placeholder="اليوزر للدخول (مثلاً: ahmed)"/>
-<input type="text" id="newEmpPin" placeholder="الرقم السري (مثلاً: 1234)"/>
-<button type="button" class="btn" style="width:100%;margin-bottom:12px" onclick="addEmployee()">+ إضافة موظف</button>
+<h3 id="t_empH" style="margin-top:0;color:#1e3a8a"></h3>
+<input type="text" id="newEmpName"/>
+<input type="text" id="newEmpUser"/>
+<input type="text" id="newEmpPin"/>
+<button type="button" id="b_addEmp" class="btn" style="width:100%;margin-bottom:12px" onclick="addEmployee()"></button>
 <div id="empList"></div>
-<div style="text-align:left;margin-top:12px"><button type="button" class="btn-outline" onclick="document.getElementById('empModal').classList.remove('open')">إغلاق</button></div>
+<div style="text-align:left;margin-top:12px"><button type="button" id="b_closeEmp" class="btn-outline" onclick="document.getElementById('empModal').classList.remove('open')"></button></div>
 </div>
 </div>
 <div class="modal-backdrop" id="iconsModal">
 <div class="modal">
-<h3 style="margin-top:0;color:#1e3a8a">🎨 تخصيص الرموز والألوان</h3>
+<h3 id="t_icoH" style="margin-top:0;color:#1e3a8a"></h3>
 <div id="iconSettingsList"></div>
-<div style="text-align:left;margin-top:12px"><button type="button" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')">تم</button></div>
+<div style="text-align:left;margin-top:12px"><button type="button" id="b_doneIco" class="btn" onclick="document.getElementById('iconsModal').classList.remove('open')"></button></div>
 </div>
 </div>
 <div class="modal-backdrop" id="dayModal">
 <div class="modal">
-<h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a">تفاصيل اليوم</h3>
+<h3 id="modalDateTitle" style="margin-top:0;color:#1e3a8a"></h3>
 <div class="status-options" id="statusOptions"></div>
 <div id="permTimeBox" class="hidden" style="margin-bottom:10px">
-<label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">⏰ وقت الاستئذان:</label>
+<label id="t_timeL" style="font-size:13px;font-weight:700;display:block;margin-bottom:4px"></label>
 <input type="time" id="permTime" style="margin:0"/>
 </div>
-<textarea id="dayNote" rows="2" placeholder="اكتب ملاحظة..."></textarea>
-<label style="font-size:13px;font-weight:700;display:block;margin-bottom:4px">📎 إرفاق صورة (طبية / إجازة):</label>
+<textarea id="dayNote" rows="2"></textarea>
+<label id="t_attL" style="font-size:13px;font-weight:700;display:block;margin-bottom:4px"></label>
 <input type="file" id="dayImageInput" accept="image/*" onchange="handleImageUpload(event)"/>
 <div id="imagePreviewContainer"></div>
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-<button type="button" class="btn-danger" onclick="clearDayData()">مسح</button>
-<button type="button" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')">إلغاء</button>
-<button type="button" class="btn" onclick="saveDayData()">حفظ</button>
+<button type="button" id="b_clr" class="btn-danger" onclick="clearDayData()"></button>
+<button type="button" id="b_can" class="btn-outline" onclick="document.getElementById('dayModal').classList.remove('open')"></button>
+<button type="button" id="b_sav" class="btn" onclick="saveDayData()"></button>
 </div>
 </div>
 </div>
 <script>
-const DB="https://"+"bonus-cal-default-rtdb"+".firebaseio.com";
-const ADMIN_USER="admin";
-const ADMIN_PIN="9999";
-function toEn(s){const ar="٠١٢٣٤٥٦٧٨٩";let out="",str=String(s||"").trim();for(let i=0;i<str.length;i++){const ch=str.charAt(i),idx=ar.indexOf(ch);out+=idx>=0?String(idx):ch;}return out;}
-async function fb(path,method,body){const res=await fetch(DB+path+".json",{method:method||"GET",headers:{"Content-Type":"application/json"},body:body!==undefined?JSON.stringify(body):undefined});if(!res.ok)throw new Error("خطأ في الخادم: "+res.status);return await res.json();}
-const MONTHS_AR=new Array("يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر");
-const STATUS_META={
-work:{label:"يوم عمل",deduct:false,choices:new Array("✅","💼","🏢","⭐","👍")},
-sick:{label:"إجازة مرضية",deduct:true,choices:new Array("➕","🏥","🩺","💊","🩹")},
-absent:{label:"غياب",deduct:true,choices:new Array("❌","🚫","⛔","❗","🔴")},
-perm_in:{label:"استئذان دخول",deduct:true,choices:new Array("🕒","🌅","🚪","⏳","➡️")},
-perm_out:{label:"استئذان خروج",deduct:true,choices:new Array("🕔","🌇","🏃","⏳","⬅️")},
-annual:{label:"إجازة دورية",deduct:true,choices:new Array("🌴","✈️","🏖️","☀️","🗓️")}
-};
-let customIcons={work:"✅",sick:"➕",absent:"❌",perm_in:"🕒",perm_out:"🕔",annual:"🌴"};
-try{const saved=localStorage.getItem("bonus_icons");if(saved)customIcons=Object.assign(customIcons,JSON.parse(saved));}catch(e){}
-let customColors={work:"#dcfce7",sick:"#fee2e2",absent:"#ffe4e6",perm_in:"#fef3c7",perm_out:"#ffedd5",annual:"#dbeafe"};
-try{const sc=localStorage.getItem("bonus_colors");if(sc)customColors=Object.assign(customColors,JSON.parse(sc));}catch(e){}
+const TX={
+title:"\u062a\u0642\u0648\u064a\u0645 \u0627\u0644\u0628\u0648\u0646\u0635",
+uPh:"\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 (\u0627\u0644\u064a\u0648\u0632\u0631)",
+pPh:"\u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0633\u0631\u064a",
+login:"\u062f\u062e\u0648\u0644",
+selEmp:"\u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u0648\u0638\u0641:",
+icons:"\ud83c\udfa8 \u0627\u0644\u0631\u0645\u0648\u0632",
+dark:"\ud83c\udf19 \u062f\u0627\u0643\u0646",
+light:"\u2600\ufe0f \u0641\u0627\u062a\u062d",
+emps:"\ud83d\udc65 \u0627\u0644\u0645\u0648\u0638\u0641\u064a\u0646",
+exit:"\u062e\u0631\u0648\u062c",
+goal:"\u0647\u062f\u0641 \u0627\u0644\u0628\u0648\u0646\u0635",
+ded:"\u0623\u064a\u0627\u0645 \u0645\u062e\u0635\u0648\u0645\u0629",
+rem:"\u0627\u0644\u0645\u062a\u0628\u0642\u064a \u0644\u0644\u0628\u0648\u0646\u0635",
+prev:"\u25b6 \u0627\u0644\u0633\u0627\u0628\u0642",
+next:"\u0627\u0644\u062a\u0627\u0644\u064a \u25c0",
+empH:"\ud83d\udc65 \u0625\u0636\u0627\u0641\u0629 \u0648\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0638\u0641\u064a\u0646",
+eName:"\u0627\u0633\u0645 \u0627\u0644\u0645\u0648\u0638\u0641",
+eUser:"\u0627\u0644\u064a\u0648\u0632\u0631 \u0644\u0644\u062f\u062e\u0648\u0644",
+ePin:"\u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0633\u0631\u064a",
+addEmp:"+ \u0625\u0636\u0627\u0641\u0629 \u0645\u0648\u0638\u0641",
+close:"\u0625\u063a\u0644\u0627\u0642",
+icoH:"\ud83c\udfa8 \u062a\u062e\u0635\u064a\u0635 \u0627\u0644\u0631\u0645\u0648\u0632 \u0648\u0627\u0644\u0623\u0644\u0648\u0627\u0646",
+done:"\u062a\u0645",
+timeL:"\u23f0 \u0648\u0642\u062a \u0627\u0644\u0627\u0633\u062a\u0626\u0630\u0627\u0646:",
+notePh:"\u0627\u0643\u062a\u0628 \u0645\u0644\u0627\u062d\u0638\u0629...",
+attL:"\ud83d\udcce \u0625\u0631\u0641\u0627\u0642 \u0635\u0648\u0631\u0629:",
+clr:"\u0645\u0633\u062d",
+can:"\u0625\u0644\u063a\u0627\u0621",
+sav:"\u062d\u0641\u0638",
+work:"\u064a\u0648\u0645 \u0639\u0645\u0644",
+sick:"\u0625\u062c\u0627\u0632\u0629 \u0645\u0631\u0636\u064a\u0629",
+absent:"\u063a\u064a\u0627\u0628",
+perm_in:"\u0627\u0633\u062a\u0626\u0630\u0627\u0646 \u062f\u062e\u0648\u0644",
