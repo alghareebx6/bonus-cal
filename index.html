@@ -90,3 +90,160 @@ document.getElementById("loginBtn").onclick=async function(){
     document.getElementById("adminControls").classList.remove("hidden");
     document.getElementById("manageEmpBtn").classList.remove("hidden");
     renderCalendar();
+    await loadEmployees();
+    return;
+  }
+  err.textContent="جاري التحقق...";
+  try{
+    const rows=await api("/employees?username=eq."+encodeURIComponent(u)+"&pin=eq."+encodeURIComponent(p)+"&select=*");
+    const emp=rows.at(0);
+    if(!emp){err.textContent="اليوزر أو الرقم السري غير صحيح";return;}
+    activeEmpId=emp.id;
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appScreen").classList.remove("hidden");
+    document.getElementById("empTitleBox").classList.remove("hidden");
+    document.getElementById("empWelcome").textContent="الموظف: "+emp.name;
+    await loadEmployeeRecords(activeEmpId);
+  }catch(e){err.textContent="تعذر الاتصال: "+e.message;}
+};
+
+document.getElementById("empSelect").onchange=function(){activeEmpId=this.value;loadEmployeeRecords(this.value);};
+
+async function loadEmployees(){
+  try{
+    employees=await api("/employees?select=*&order=created_at.asc");
+    const sel=document.getElementById("empSelect");
+    sel.innerHTML=employees.length
+      ? employees.map(function(e){return'<option value="'+e.id+'">'+e.name+' ('+e.username+')</option>';}).join("")
+      : '<option value="">لا يوجد موظفين - أضف موظفاً</option>';
+    const firstEmp=employees.at(0);
+    if(firstEmp){
+      if(!activeEmpId||!employees.some(function(x){return x.id===activeEmpId;})) activeEmpId=firstEmp.id;
+      sel.value=activeEmpId;
+      await loadEmployeeRecords(activeEmpId);
+    }else{records={};renderCalendar();updateStats();}
+  }catch(e){alert("خطأ: "+e.message);}
+}
+
+async function loadEmployeeRecords(empId){
+  const rows=await api("/records?emp_id=eq."+encodeURIComponent(empId)+"&select=*");
+  records={};
+  rows.forEach(function(r){records[r.date]=r;});
+  renderCalendar();updateStats();
+}
+
+function openEmpModal(){renderEmpList();document.getElementById("empModal").classList.add("open");}
+function renderEmpList(){
+  document.getElementById("empList").innerHTML=employees.map(function(e){return'<div class="emp-item"><div><strong>'+e.name+'</strong><br><small>اليوزر: '+e.username+' | الرقم السري: '+e.pin+'</small></div><button type="button" class="btn-danger" onclick="deleteEmployee(\''+e.id+'\')">حذف</button></div>';}).join("");
+}
+
+async function addEmployee(){
+  const name=document.getElementById("newEmpName").value.trim();
+  const username=toEn(document.getElementById("newEmpUser").value).toLowerCase();
+  const pin=toEn(document.getElementById("newEmpPin").value);
+  if(!name||!username||!pin)return alert("عبّ جميع الخانات");
+  try{
+    await api("/employees",{method:"POST",body:{name:name,username:username,pin:pin}});
+    document.getElementById("newEmpName").value="";
+    document.getElementById("newEmpUser").value="";
+    document.getElementById("newEmpPin").value="";
+    await loadEmployees();renderEmpList();
+  }catch(e){alert("اليوزر مستخدم مسبقاً أو حدث خطأ");}
+}
+
+async function deleteEmployee(id){
+  if(!confirm("متأكد تبي تحذف الموظف وسجلاته؟"))return;
+  await api("/employees?id=eq."+encodeURIComponent(id),{method:"DELETE"});
+  if(activeEmpId===id)activeEmpId=null;
+  await loadEmployees();renderEmpList();
+}
+
+function updateStats(){
+  let d=0;
+  Object.values(records).forEach(function(r){if(STATUS_META[r.status]&&STATUS_META[r.status].deduct)d++;});
+  document.getElementById("deductedCount").textContent=d;
+  document.getElementById("remainingCount").textContent=Math.max(0,180-d);
+}
+
+function renderCalendar(){
+  document.getElementById("monthLabel").textContent=MONTHS_AR.at(currentMonth)+" "+currentYear;
+  const tbody=document.getElementById("calBody");tbody.innerHTML="";
+  const first=new Date(currentYear,currentMonth,1).getDay();
+  const days=new Date(currentYear,currentMonth+1,0).getDate();
+  let day=1;
+  for(let r=0;r<6&&day<=days;r++){
+    const tr=document.createElement("tr");
+    for(let c=0;c<7;c++){
+      const td=document.createElement("td");
+      if((r===0&&c<first)||day>days){td.className="empty";}
+      else{
+        const d=day;
+        const key=currentYear+"-"+String(currentMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+        const rec=records[key];
+        if(rec&&rec.status)td.classList.add("st-"+rec.status);
+        td.innerHTML='<div class="day-num">'+d+'</div>'+(rec&&rec.status?'<div class="day-icon">'+customIcons[rec.status]+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
+        td.onclick=function(){openDayModal(key,d);};
+        day++;
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function changeMonth(delta){currentMonth+=delta;if(currentMonth<0){currentMonth=11;currentYear--;}if(currentMonth>11){currentMonth=0;currentYear++;}renderCalendar();}
+
+function openDayModal(key,d){
+  if(!activeEmpId)return alert("أضف موظف أولاً من زر الموظفين");
+  selectedDateKey=key;
+  const rec=records[key]||{};
+  tempStatus=rec.status||"work";tempImage=rec.image||null;
+  document.getElementById("modalDateTitle").textContent=d+" "+MONTHS_AR.at(currentMonth)+" "+currentYear;
+  document.getElementById("dayNote").value=rec.note||"";
+  document.getElementById("dayImageInput").value="";
+  renderStatusButtons();renderImagePreview();
+  document.getElementById("dayModal").classList.add("open");
+}
+
+function renderStatusButtons(){
+  document.getElementById("statusOptions").innerHTML=Object.entries(STATUS_META).map(function(entry){const k=entry.at(0),m=entry.at(1);return'<button type="button" class="st-btn '+(tempStatus===k?"active":"")+'" onclick="tempStatus=\''+k+'\';renderStatusButtons()">'+customIcons[k]+' '+m.label+'</button>';}).join("");
+}
+
+function handleImageUpload(e){
+  const f=e.target.files.item(0);if(!f)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){tempImage=ev.target.result;renderImagePreview();};
+  reader.readAsDataURL(f);
+}
+
+function renderImagePreview(){
+  document.getElementById("imagePreviewContainer").innerHTML=tempImage?'<img src="'+tempImage+'" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:6px" onclick="window.open(this.src)"/>':"";
+}
+
+async function saveDayData(){
+  const note=document.getElementById("dayNote").value.trim();
+  const id=activeEmpId+"_"+selectedDateKey;
+  const payload={id:id,emp_id:activeEmpId,date:selectedDateKey,status:tempStatus,note:note,image:tempImage};
+  await api("/records",{method:"POST",prefer:"resolution=merge-duplicates",body:payload});
+  records[selectedDateKey]=payload;
+  document.getElementById("dayModal").classList.remove("open");
+  renderCalendar();updateStats();
+}
+
+async function clearDayData(){
+  const id=activeEmpId+"_"+selectedDateKey;
+  await api("/records?id=eq."+encodeURIComponent(id),{method:"DELETE"});
+  delete records[selectedDateKey];
+  document.getElementById("dayModal").classList.remove("open");
+  renderCalendar();updateStats();
+}
+
+function openIconsModal(){
+  document.getElementById("iconSettingsList").innerHTML=Object.entries(STATUS_META).map(function(entry){const k=entry.at(0),m=entry.at(1);return'<div class="icon-row"><strong>'+m.label+'</strong><div>'+m.choices.map(function(ic){return'<button type="button" class="icon-pick '+(customIcons[k]===ic?"selected":"")+'" onclick="setIcon(\''+k+'\',\''+ic+'\')">'+ic+'</button>';}).join("")+'</div></div>';}).join("");
+  document.getElementById("iconsModal").classList.add("open");
+}
+
+function setIcon(k,ic){customIcons[k]=ic;try{localStorage.setItem("bonus_icons",JSON.stringify(customIcons));}catch(e){}openIconsModal();renderCalendar();}
+</script>
+</body>
+</html>
