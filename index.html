@@ -181,7 +181,7 @@ function renderCalendar(){
         const key=currentYear+"-"+String(currentMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
         const rec=records[key];
         if(rec&&rec.status)td.classList.add("st-"+rec.status);
-                const now=new Date(),isToday=(d===now.getDate()&&currentMonth===now.getMonth()&&currentYear===now.getFullYear());if(isToday)td.style.cssText="border:2.5px solid #1e3a8a;box-shadow:inset 0 0 6px rgba(30,58,138,.25)";td.innerHTML='<div class="day-num" style="'+(isToday?'color:#1e3a8a;font-size:14px':'')+'">'+d+(isToday?' <small style="font-size:9px;background:#1e3a8a;color:#fff;padding:1px 4px;border-radius:4px">اليوم</small>':'')+'</div>'+(rec&&rec.status?'<div class="day-icon">'+customIcons[rec.status]+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
+                        const t=new Date(),isT=(d===t.getDate()&&currentMonth===t.getMonth()&&currentYear===t.getFullYear());if(isT)td.style.border="3px solid #1e3a8a";td.innerHTML='<div class="day-num">'+(isT?'🔵 '+d:d)+'</div>'+(rec&&rec.status?'<div class="day-icon">'+customIcons[rec.status]+'</div>':"")+(rec&&rec.image?'<span class="has-attach">📎</span>':"");
 
         td.onclick=function(){openDayModal(key,d);};
         day++;
